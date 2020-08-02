@@ -7,7 +7,7 @@
 3. BUKA index.html dengan broser
 
 ## FITUR
-### HOME
+#### HOME
 -  GENRES
     - Menu genres untuk filter movie dengan menggunkan genre saja
 -  SEARCH
