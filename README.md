@@ -30,3 +30,7 @@
     - Menu ini adalah list movie yang ditayangkan berdasarkan filter waktu rilis hari ini.
 - COMING SOON
     - Menu ini adalah list movie yang ditayangkan berdasarkan filter waktu rilis lebih dari hari ini.
+
+### Nama  : Moh Febri Nurul Qorik, S.Kom
+### Email : mohfebrinq@gmail.com
+### Telpon: 081216627447
