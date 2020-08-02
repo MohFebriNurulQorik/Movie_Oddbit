@@ -1,0 +1,329 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Febri Movie</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-func.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src='https://kit.fontawesome.com/a076d05399.js'></script>
+<style>
+  a{text-decoration: none;}
+  .bg {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    height: 550px;
+  }
+  .ps {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 40%;
+    height: 307px;
+    margin: 20px 20px 0px 0px;
+    border: 3px white solid;
+    float: right;
+  }
+  .logo{
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100px;
+    height: auto;
+    padding: 20px 0px 0px 20px;
+    
+
+  }
+  .dec{
+    width: 60%;
+    
+  }
+  .pku{
+    padding: 20px;
+    color: #000;
+  }
+  .titleku{
+    font-size: 16px;
+    color: rgb(3 144 167);
+    font-weight: bold;
+  }
+  *{
+    font-family: -apple-system, BlinkMacSystemFont,'Segoe UI','Roboto', 'Droid Sans','Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+<div id="shell">
+  <div id="header">
+    <h1 id="logo"><a href="#">Movie</a></h1>
+    <div class="social"> 
+      <ul>
+        
+      </ul>
+    </div>
+    <div id="navigation">
+      <ul>
+        <li><a class="active" href="#">HOME</a></li>
+      </ul>
+    </div>
+    <div id="sub-navigation">
+      <h2 style="font-size: 24px;">{{detail_movie.title}}</h2>
+    </div>
+  </div>
+  <div id="main">
+    <div id="content">
+      <br>
+      <div class="box" style="border: solid 5px rgb(136, 134, 131);background-color:rgba(248, 240, 230, 0.706);"  >
+        <div class="bg"  v-bind:style="{ 'background-image': 'url(' + this.backdrop_path + ')' }">
+          <div id="news" style="background: rgba(92, 89, 87, 0.5); ">
+            <div v-for="(item, index) in detail_movie.production_companies" :key="index" v-if="item.logo_path!=null">
+              <table>
+                <tr>
+                  <td> 
+                      <img class="logo" style="padding-bottom: 25px;" :src="'https://image.tmdb.org/t/p/w500' + item.logo_path" alt="altText"/>
+                    
+                  </td>
+                  <td> 
+                      <h1    style="width:100%;margin-top: 30px;padding-bottom: 25px; padding-left: 25px;color: white;">
+                       {{item.name}}
+                     </h1>
+                  </td>
+                </tr>
+              </table>
+            </div>
+           
+          </div>
+          <div id="coming"  >
+            <div style="background: rgba(248, 240, 230, 0.705);height: 550px;">
+              <div  class="ps" v-bind:style="{ 'background-image': 'url('+'https://image.tmdb.org/t/p/w500'+ detail_movie.poster_path + ')' }"></div>
+              <div class="dec">
+                <div class="pku">
+                  <p class='titleku'>Title</p>
+                  <p style="font-weight: bold;font-size: 18px;"> {{detail_movie.title}}</p>
+                  <p class='titleku'>Popularity</p>
+                  <p style="font-weight: bold;font-size: 18px;"> {{detail_movie.popularity}}</p>
+                  <p class='titleku'>Geners</p>
+                  <p style="font-weight: bold;font-size: 18px;" >
+                    <span v-for="(item, index) in detail_movie.genres" :key="index">
+                      {{item.name}}
+                    </span> 
+                  </p>
+                  <p class='titleku'>Production Companies</p>
+                  <p style="font-weight: bold;font-size: 18px;" >
+                    <p style="font-weight: bold;font-size: 18px;" v-for="(item, index) in detail_movie.production_companies" :key="index">
+                      {{item.name}}
+                    </p> 
+                  </p>
+                  <p class='titleku'>Release Date</p>
+                  <p style="font-weight: bold;font-size: 18px;"> {{detail_movie.release_date}}</p>
+                  <p class='titleku'>Duration</p>
+                  <p style="font-weight: bold;font-size: 18px;"> 
+                    {{ hasil }}
+                  </p>
+                  <p class='titleku'>Revenue</p>
+                  <p style="font-weight: bold;font-size: 18px;"> 
+                    $ {{ detail_movie.revenue }}
+                  </p>
+                  <p class='titleku'>Vote Average</p>
+                  <p style="font-weight: bold;font-size: 18px;"> 
+                    {{ detail_movie.vote_average }}
+                  </p>
+                  <p class='titleku'>Vote Count</p>
+                  <p style="font-weight: bold;font-size: 18px;"> 
+                    {{ detail_movie.vote_count }}
+                  </p>
+                  <p class='titleku'>Spoken Languages</p>
+                  <p style="font-weight: bold;font-size: 18px;"> 
+                    <span style="font-weight: bold;font-size: 18px;" v-for="(item, index) in detail_movie.spoken_languages" :key="index">
+                      {{item.name}}
+                    </span> 
+                  </p>
+                </div>
+                  
+              </div>
+              <div style="text-align: right;">
+                <a style="font-size: 24px;font-weight: bold;margin-right: 20px;color: #000;" href="index.html?"> <i class="fas fa-door-open" ></i> Back To Home</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:20px;" >
+          <h1 style="color: black;">Description</h1>
+          <h3 style="color: rgb(39, 39, 39);">{{detail_movie.overview}}</h3>
+        </div>
+      </div>
+
+
+        <div class="cl">&nbsp;</div>
+      </div>
+    </div>
+    <div id="news">
+      <div class="head">
+        <h3>NEWS</h3>
+        <p class="text-right"><a href="#">&nbsp;</a></p>
+      </div>
+      <div class="content" v-for="(item, index) in new_movies.results" :key="index" v-if="item.overview !=null||item.overview !=''">
+        <a v-bind:href="'detail.html?id_movie='+ item.id+'&backdrop_path='+item.backdrop_path">
+        <p class="date">{{item.release_date}}</p>
+        <h4> {{item.title}}</h4>
+      </a>
+        <p>{{item.overview}}</p> 
+        <p style="color:rgb(41, 200, 240)">Popularity : {{item.popularity}}</p> 
+      
+      </div>
+
+    </div>
+    <div id="coming">
+      <div class="head">
+        <h3>COMING SOON<strong>!</strong></h3>
+        <p class="text-right"><a href="#">&nbsp;</a></p>
+      </div>
+      <div class="content" v-for="(item, index) in coming_movie.results" :key="index" v-if="item.poster_path!=null">
+        <h4>{{item.title}}</h4>
+        <a v-bind:href="'detail.html?id_movie='+ item.id+'&backdrop_path='+item.backdrop_path">
+          <img v-bind:src="'https://image.tmdb.org/t/p/w500' + item.poster_path" alt="" /></a>
+        <p>{{item.overview}}</p>
+        <a v-bind:href="'detail.html?id_movie='+ item.id+'&backdrop_path='+item.backdrop_path">{{item.release_date}}</a> 
+      </div>
+      <div class="cl">&nbsp;</div>
+    </div>
+    <div class="cl">&nbsp;</div>
+  </div>
+  <div id="footer">
+    <p class="lf">Copyright &copy; 2020 <a href="#">Febri</a> - All Rights Reserved</p>
+    <p class="rf">Design by <a href="#">Mohfebrinurulqorik.com</a></p>
+    <div style="clear:both;"></div>
+  </div>
+</div>
+</div>
+<script>
+  var app = new Vue({
+      el: "#app",
+      data: {
+          id_movie:null,
+          backdrop_path:null,
+          genres:[],
+          movies_list:[],
+          new_movies:[],
+          coming_movie:[],
+          detail_movie:[]
+      },
+      mounted() {
+        this.new(),
+        this.coming(),
+        this.detail(),
+        this.load()
+      },
+      computed: {
+                hasil: function() {
+                  if(this.detail_movie.runtime%60==0){
+                    var jam=this.detail_movie.runtime / 60;
+                      if(jam>1){
+                        return jam +' Haours'; 
+                      }else{
+                        return jam +' Haour'; 
+                      }
+                  }
+                  else if(this.detail_movie.runtime>60){
+                    var jam=Math.floor(this.detail_movie.runtime / 60);
+                    if(jam>1){
+                        jam= jam +' Haours'; 
+                      }else{
+                        jam= jam +' Haour'; 
+                      }
+
+                    var menit= (this.detail_movie.runtime % 60);
+                    if(menit>1){
+                        menit= menit +' Minutes'; 
+                      }else{
+                        menit= menit +' Minute'; 
+                      }
+                    return jam +' '+ menit;
+                  }else if(this.detail_movie.runtime<60){
+                    var menit= (this.detail_movie.runtime % 60);
+                    if(menit>1){
+                        menit= menit +' Minutes'; 
+                      }else{
+                        menit= menit +' Minute'; 
+                      }
+                    return menit;
+                  }
+                }
+          },
+      methods: {
+        
+       
+        new(){
+          function formatDate(date) {
+              var d = new Date(date),
+                  month = '' + (d.getMonth() + 1),
+                  day = '' + d.getDate(),
+                  year = d.getFullYear();
+
+              if (month.length < 2) month = '0' + month;
+              if (day.length < 2) day = '0' + day;
+
+              return [year, month, day].join('-');
+          }
+        var a= new Date();
+          var tgl =  formatDate(a);
+          var url='https://api.themoviedb.org/3/discover/movie?api_key=1b869b3ccf57d089047ded4b1de007b8&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=true&page=1&primary_release_date.gte='+tgl+'&primary_release_date.lte='+tgl;
+
+          axios.get(url).then(res => {
+            this.new_movies = res.data //respon dari rest api dimasukan ke users
+          }).catch ((err) => {
+            console.log(err);
+          })
+        },
+        coming(){
+          function formatDate(date) {
+              var d = new Date(date),
+                  month = '' + (d.getMonth() + 2),
+                  day = '' + d.getDate(),
+                  year = d.getFullYear();
+
+              if (month.length < 2) month = '0' + month;
+              if (day.length < 2) day = '0' + day;
+
+              return [year, month, day].join('-');
+          }
+        var a= new Date();
+          var tgl =  formatDate(a);
+          var url='https://api.themoviedb.org/3/discover/movie?api_key=1b869b3ccf57d089047ded4b1de007b8&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=true&page=1&primary_release_date.gte='+tgl;
+
+          axios.get(url).then(res => {
+            this.coming_movie = res.data //respon dari rest api dimasukan ke users
+          }).catch ((err) => {
+            console.log(err);
+          })
+        },
+        detail(){
+          let uri = window.location.search.substring(1); 
+          let params = new URLSearchParams(uri);
+          this.backdrop_path='https://image.tmdb.org/t/p/w500'+params.get("backdrop_path");
+          this.id_movie=params.get("id_movie");
+        },
+        load(){
+          var url='https://api.themoviedb.org/3/movie/'+this.id_movie+'?api_key=1b869b3ccf57d089047ded4b1de007b8&language=en-US';
+
+          axios.get(url).then(res => {
+            this.detail_movie= res.data //respon dari rest api dimasukan ke users
+            console.log(this.detail_movie);
+          }).catch ((err) => {
+            console.log(err);
+          })
+
+        }
+
+
+      }
+  })
+</script>
+</body>
+</html>

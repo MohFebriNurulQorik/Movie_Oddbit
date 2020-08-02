@@ -1,0 +1,302 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Febri Movie</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-func.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.0/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<style>
+  a{text-decoration: none;}
+  input[type=text],input[type=date], select, textarea {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+.liku{
+  line-height: 30px;
+  padding-left: 25px;
+  font-weight: 700;
+}
+
+label {
+  /* padding: 12px 12px 12px 0; */
+  display: inline-block;
+}
+
+input[type=submit],.btn-ku {
+  background-color: #4CAF50;
+  color: white;
+  padding: 8px 30px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  /* float: right; */
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+</style>
+</head>
+<body>
+<div id="app">
+<div id="shell">
+  <div id="header">
+    <h1 id="logo"><a href="#">Movie</a></h1>
+    <div class="social"> 
+      <ul>
+        
+      </ul>
+    </div>
+    <div id="navigation">
+      <ul>
+        <li><a class="active" href="#">HOME</a></li>
+      </ul>
+    </div>
+    
+    <div id="sub-navigation" style="    height: 100px;"> 
+      <div style="font-size: 21px;">
+        GENRES :
+      </div>
+      <ul>
+        
+        <li v-for="(genre,key) in genres.genres">
+          <button  @click.prevent="genre_move(genre.id)" style="color: #29c8f0;background-color: transparent;border: none;cursor: pointer;line-height: 35px;font-weight: 700;">{{genre.name}}</button>
+        </li>
+      </ul>
+    </div>
+    <div id="sub-navigation">
+      <div style="font-size: 21px;">
+        <form action="#" method="get" accept-charset="utf-8">
+          <div   for="search-field">SEARCH</div>
+          <ul style="padding-top: 10px; font-size: 14px;">
+            <li class="liku">From :</li>
+            <li><input type="date" v-model="start_date" value="" id="search-field" class="blink search-field" /></li>
+            <li class="liku">To :</li>
+            <li><input type="date" v-model="end_date" value="" id="search-field" class="blink search-field"  /></li>
+            <li class="liku">Sort By :</li>
+            <li>
+              <select name="" class="js-example-basic-single" v-model="sort_by">
+                <optgroup label="Popularity" >
+                  <option value="popularity.asc">Ascending</option>
+                  <option value="popularity.desc">Descending</option>
+                </optgroup>
+                <optgroup label="Release Date" >
+                  <option value="release_date.asc">Ascending</option>
+                  <option value="release_date.desc">Descending</option>
+                </optgroup>
+                <optgroup label="Vote Count" >
+                  <option value="vote_count.asc">Ascending</option>
+                  <option value="vote_count.desc">Descending</option>
+                </optgroup>
+              </select>
+          </li>
+          </ul>
+          <button class="btn-ku" style="background-color: palegoldenrod;color: #000;border: none;cursor: pointer;margin-left: 10px;" @click.prevent="tanggal_push">Find</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div id="main">
+    <div id="content">
+      <h1 style="padding:10px 0px;">REKOMENDASI</h1>
+      <div class="box">
+        <div class="movie" style="padding-top: 20px;height: 370px;" v-for="(movie, key) in movies_list.results" v-if="movie.poster_path!=null">
+          <div class="movie-image" @mouseover="mouseOver(key)" > 
+            <a v-bind:href="'detail.html?id_movie='+ movie.id+'&backdrop_path='+movie.backdrop_path">
+            <span class="play" v-bind:id="(key)" @mouseleave="mouseOut(key)"  >
+              <span class="name">{{movie.original_title}}
+                <br>
+                {{movie.release_date}}
+              </span>
+            </span> 
+            
+              <img  v-bind:src="'https://image.tmdb.org/t/p/w500' + movie.poster_path" alt="" />
+            </a>
+          </div>
+          <div class="rating">
+            <p>RATING : {{movie.vote_average}}</p>
+            <span style="float: right;" class="fa fa-eye"> {{movie.popularity}}</span> 
+          </div>
+          <div class="rating" style="height: 30px;overflow-y: hidden;">
+            <p>GENRES : 
+              <span v-for="item1 in movie.genre_ids" :key="item1.id" >
+                <span v-for="item2 in genres.genres" :key="item2.id" >
+                  <span v-if="item1 == item2.id"> {{item2.name}}</span>
+                </span>
+              </span>
+            </p> 
+          </div>
+          <div class="rating">
+            <p>Deskripsi :</p>
+            <p style="height: 50px;overflow-y: hidden;">{{movie.overview}}</p> 
+          </div>
+          <div class="rating">
+            <a v-bind:href="'detail.html?id_movie='+ movie.id+'&backdrop_path='+movie.backdrop_path" style="color: orange;">More detail ..</a>
+          </div>
+        </div>
+
+
+
+        <div class="cl">&nbsp;</div>
+      </div>
+    </div>
+    <div id="news">
+      <div class="head">
+        <h3>NEWS</h3>
+        <p class="text-right"><a href="#">&nbsp;</a></p>
+      </div>
+      <div class="content" v-for="(item, index) in new_movies.results" :key="index" v-if="item.overview !=null||item.overview !=''">
+        <a v-bind:href="'detail.html?id_movie='+ item.id+'&backdrop_path='+item.backdrop_path">
+        <p class="date">{{item.release_date}}</p>
+        <h4> {{item.title}}</h4>
+      </a>
+        <p>{{item.overview}}</p> 
+        <p style="color:rgb(41, 200, 240)">Popularity : {{item.popularity}}</p> 
+      
+      </div>
+
+    </div>
+    <div id="coming">
+      <div class="head">
+        <h3>COMING SOON<strong>!</strong></h3>
+        <p class="text-right"><a href="#">&nbsp;</a></p>
+      </div>
+      <div class="content" v-for="(item, index) in coming_movie.results" :key="index" v-if="item.poster_path!=null">
+        <h4>{{item.title}}</h4>
+        <a v-bind:href="'detail.html?id_movie='+ item.id+'&backdrop_path='+item.backdrop_path">
+          <img v-bind:src="'https://image.tmdb.org/t/p/w500' + item.poster_path" alt="" /></a>
+        <p>{{item.overview}}</p>
+        <a v-bind:href="'detail.html?id_movie='+ item.id+'&backdrop_path='+item.backdrop_path">{{item.release_date}}</a> 
+      </div>
+      <div class="cl">&nbsp;</div>
+    </div>
+    <div class="cl">&nbsp;</div>
+  </div>
+  <div id="footer">
+    <p class="lf">Copyright &copy; 2020 <a href="#">Febri</a> - All Rights Reserved</p>
+    <p class="rf">Design by <a href="#">Mohfebrinurulqorik.com</a></p>
+    <div style="clear:both;"></div>
+  </div>
+</div>
+</div>
+
+<script>
+  var app = new Vue({
+      el: "#app",
+      data: {
+          start_date:'',
+          end_date:'',
+          sort_by:'popularity.desc',
+          genres:[],
+          movies_list:[],
+          new_movies:[],
+          coming_movie:[],
+      },
+      mounted() {
+        this.load(),
+        this.movies(),
+        this.new(),
+        this.coming()
+      },
+      methods: {
+        
+        mouseOver: function(a){
+          document.getElementById(a).style.display = "inline-block";
+          
+        },
+        mouseOut:function(b){
+          document.getElementById(b).style.display = "none";
+        },
+        load(){
+            axios.get('https://api.themoviedb.org/3/genre/movie/list?api_key=1b869b3ccf57d089047ded4b1de007b8').then(res => {
+            this.genres = res.data //respon dari rest api dimasukan ke users
+          }).catch ((err) => {
+            console.log(err);
+          })
+           
+
+        },
+        movies(){
+          axios.get('https://api.themoviedb.org/3/movie/top_rated?api_key=1b869b3ccf57d089047ded4b1de007b8&language=en-US&page=30').then(res => {
+            this.movies_list = res.data //respon dari rest api dimasukan ke users
+          }).catch ((err) => {
+            console.log(err);
+          })
+        },
+        new(){
+          function formatDate(date) {
+              var d = new Date(date),
+                  month = '' + (d.getMonth() + 1),
+                  day = '' + d.getDate(),
+                  year = d.getFullYear();
+
+              if (month.length < 2) month = '0' + month;
+              if (day.length < 2) day = '0' + day;
+
+              return [year, month, day].join('-');
+          }
+        var a= new Date();
+          var tgl =  formatDate(a);
+          var url='https://api.themoviedb.org/3/discover/movie?api_key=1b869b3ccf57d089047ded4b1de007b8&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_date.gte='+tgl+'&primary_release_date.lte='+tgl;
+
+          axios.get(url).then(res => {
+            this.new_movies = res.data //respon dari rest api dimasukan ke users
+          }).catch ((err) => {
+            console.log(err);
+          })
+        },
+        coming(){
+          function formatDate(date) {
+              var d = new Date(date),
+                  month = '' + (d.getMonth() + 2),
+                  day = '' + d.getDate(),
+                  year = d.getFullYear();
+
+              if (month.length < 2) month = '0' + month;
+              if (day.length < 2) day = '0' + day;
+
+              return [year, month, day].join('-');
+          }
+        var a= new Date();
+          var tgl =  formatDate(a);
+          var url='https://api.themoviedb.org/3/discover/movie?api_key=1b869b3ccf57d089047ded4b1de007b8&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&primary_release_date.gte='+tgl;
+
+          axios.get(url).then(res => {
+            this.coming_movie = res.data //respon dari rest api dimasukan ke users
+          }).catch ((err) => {
+            console.log(err);
+          })
+        },
+        tanggal_push(){
+          var self = this
+          var url='https://api.themoviedb.org/3/discover/movie?api_key=1b869b3ccf57d089047ded4b1de007b8&language=en-US&include_adult=false&include_video=false&page=1&primary_release_date.gte='+self.start_date+'&primary_release_date.lte='+self.end_date+'&sort_by='+self.sort_by;
+          // console.log( self.start_date);
+          axios.get(url).then(res => {
+            this.movies_list = res.data //respon dari rest api dimasukan ke users
+          }).catch ((err) => {
+            console.log(err);
+          })
+			  },genre_move(a){
+          var url='https://api.themoviedb.org/3/discover/movie?api_key=1b869b3ccf57d089047ded4b1de007b8&with_genres='+a;
+          console.log(url);
+          axios.get(url).then(res => {
+            this.movies_list = res.data //respon dari rest api dimasukan ke users
+          }).catch ((err) => {
+            console.log(err);
+          })
+        }
+
+      }
+  })
+</script>
+</body>
+</html>
