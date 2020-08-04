@@ -1,4 +1,7 @@
 # Movie_Oddbit
+## Angular Cli
+
+
 ## VUEJS dan API
 
 ## CARA INSTALL
@@ -30,6 +33,7 @@
     - Menu ini adalah list movie yang ditayangkan berdasarkan filter waktu rilis hari ini.
 - COMING SOON
     - Menu ini adalah list movie yang ditayangkan berdasarkan filter waktu rilis lebih dari hari ini.
+
 
 ### Nama  : Moh Febri Nurul Qorik, S.Kom
 ### Email : mohfebrinq@gmail.com
